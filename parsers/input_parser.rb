@@ -9,7 +9,7 @@ class InputParser
 
   def get_info(filename)
     headers = true
-    CSV.foreach("input_test.csv") do |row|
+    CSV.foreach(filename) do |row|
       if headers
         headers = false
       else
@@ -42,5 +42,3 @@ class InputParser
     end
   end
 end
-
-InputParser.new.get_info('input_test.csv')

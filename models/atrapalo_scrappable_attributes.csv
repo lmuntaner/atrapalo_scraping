@@ -1,0 +1,26 @@
+Attributes,Selector,Nokigiri Method
+Dealer,h1.floatl + img,"[], src"
+Make,h1.floatl,content
+Category,.col12.floatr.relative > p:nth-child(3) span.bold,content
+Perceived price,#precio_total_sin_reembolso,content
+Price with reimbursment,#precio_total_con_reembolso,content
+fuel policy,img.combustible,parent_content
+pick up policy,img.localizacion,parent_content
+limit km,li.optKm,content
+km fee,li.optKm > p,content
+location,div.address > h3,content
+adress,p.address span.address,content
+phone,div.address span.phone,content
+distance,p.address + p,content
+seats,li.optAd,content
+luggage,li.optMal,content
+gas,li.optGas img,"[], alt"
+transimission,li.optTm img,"[], alt"
+pick up date,p.optIn span.bold:first-child,content
+pick up time,p.optIn span.bold:nth-child(2),content
+return date,p.optOut span.bold:first-child,content
+return time,p.optOut span.bold:nth-child(2),content
+cancellation policy,div.box-incluye-coc > ul li:first-child,content
+taxes,div.box-incluye-coc > ul li:nth-child(2),content
+modifications,div.box-incluye-coc > ul li:nth-child(3),content
+insurance conditions,#tabs-5,content

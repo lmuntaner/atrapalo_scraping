@@ -22,6 +22,7 @@ class InputParser
   def parse_row(row)
     start_date = nil
     row.each_with_index do |input, index|
+      next if input.nil?
       if index == 0
         if @info_dict['cities'].nil?
           @info_dict['cities'] = [input]

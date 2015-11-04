@@ -5,21 +5,29 @@ class AtrapaloScraper
     @url = "http://www.atrapalo.com/coches"
   end
 
-  def check_selector(selector, message)
+  def check_alert
+    @session.driver.browser.switch_to.alert.accept
+  rescue Selenium::WebDriver::Error::NoSuchAlertError
+    return
+  end
+
+  def check_selector?(selector, message)
     if @session.has_css?(selector)
       puts message
+      true
     else
       puts ":( no tagline fonud, possibly something's broken"
+      false
     end
   end
 
   def get_car_detail_links
-    @session.all("a[title='Reservar']").map { |link| link['href'] }[30..50]
+    @session.all("a[title='Reservar']").map { |link| link['href'] }
   end
 
   def get_car_details(manager:, link:)
     @session.visit link
-    check_selector("h1.floatl", "in da detail page")
+    return unless check_selector?("h1.floatl", "in da detail page")
     doc = Nokogiri::HTML(@session.html)
     manager.add_car(doc)
   end
@@ -33,13 +41,15 @@ class AtrapaloScraper
 
   def scrape(manager)
     @session.visit @url
-    check_selector("h1.atrapaloFont", "in da home page")
+    return unless check_selector?("h1.atrapaloFont", "in da home page")
     fill_and_search({
       start_date: manager.start_date,
       end_date: manager.end_date,
       city: manager.city
     })
-    check_selector("h1.h1resultados", "in da results page for #{manager.message}")
+    # Accept alert if it pops up when no results
+    check_alert
+    return unless check_selector?("h1.h1resultados", "in da results page for #{manager.message}")
     links = get_car_detail_links
     links.each do |link|
       get_car_details(link: link, manager: manager)

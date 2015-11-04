@@ -12,7 +12,7 @@ class ScraperManager
   def initialize(date_city_manager:, filename:, scraper_klass:,
                  car_manager_klass:, output_manager:)
     @date_city_manager = date_city_manager
-    date_city_manager.get_info(filename)
+    @date_city_manager.get_info(filename)
     @scraper_klass = scraper_klass
     @car_manager_klass = car_manager_klass
     @output_manager = output_manager
@@ -25,7 +25,7 @@ class ScraperManager
     # session = if ARGV[0] != 'phantomjs'
     session = Capybara::Session.new(:selenium)
     # else
-    #   session = Capybara::Session.new(:poltergeist)
+    # session = Capybara::Session.new(:poltergeist)
     # end
     @date_city_manager.each do |city, date_pair|
       scraper = @scraper_klass.new(session)
@@ -60,7 +60,7 @@ dates_manager = DateCityManager.new(parser)
 
 manager = ScraperManager.new({
   date_city_manager: dates_manager,
-  filename: "inputs/atrapalo/input_test.csv",
+  filename: "inputs/atrapalo/cities_and_dates.csv",
   scraper_klass: AtrapaloScraper,
   car_manager_klass: CarManager,
   output_manager: OutputParser.new

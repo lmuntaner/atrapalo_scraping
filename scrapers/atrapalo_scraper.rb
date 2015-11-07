@@ -1,8 +1,11 @@
+require 'mechanize'
+
 class AtrapaloScraper
 
   def initialize(session)
     @session = session
-    @url = "http://www.atrapalo.com/coches"
+    @url = "http://www.atrapalo.com"
+    @mechanize = Mechanize.new
   end
 
   def check_alert
@@ -21,14 +24,29 @@ class AtrapaloScraper
     end
   end
 
-  def get_car_detail_links
-    @session.all("a[title='Reservar']").map { |link| link['href'] }
+  def create_attrs(hidden_inputs)
+    hidden_inputs.inject({}) do |attrs, hidden_input|
+      key = hidden_input.attributes["name"].value
+      value = hidden_input.attributes["value"].value
+      attrs[key] = value
+      attrs
+    end
   end
 
-  def get_car_details(manager:, link:)
-    @session.visit link
-    return unless check_selector?("h1.floatl", "in da detail page")
+  def get_post_details
     doc = Nokogiri::HTML(@session.html)
+    forms = doc.css('li.clear form')[5..10]
+    forms.map do |form|
+      hidden_inputs = form.css('[type="hidden"]')
+      create_attrs(hidden_inputs)
+    end
+  end
+
+  def get_car_details(manager:, body_params:, url:)
+    car_detail_page = @mechanize.post(url, body_params)
+    # car_detail_page.save('car_page.html')
+    doc = car_detail_page.parser
+    puts 'creating car...'
     manager.add_car(doc)
   end
 
@@ -40,7 +58,7 @@ class AtrapaloScraper
   end
 
   def scrape(manager)
-    @session.visit @url
+    @session.visit "#{@url}/coches"
     return unless check_selector?("h1.atrapaloFont", "in da home page")
     fill_and_search({
       start_date: manager.start_date,
@@ -50,9 +68,10 @@ class AtrapaloScraper
     # Accept alert if it pops up when no results
     check_alert
     return unless check_selector?("h1.h1resultados", "in da results page for #{manager.message}")
-    links = get_car_detail_links
-    links.each do |link|
-      get_car_details(link: link, manager: manager)
+    post_details = get_post_details
+    post_details.each do |post_attrs|
+      sleep 5
+      get_car_details(url: "#{@url}/coches/carrito_base/", body_params: post_attrs, manager: manager)
     end
   end
 end

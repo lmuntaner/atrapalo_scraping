@@ -16,7 +16,7 @@ class ScrappableObject
       define_method("#{scrappable_attribute.attribute}") do
         attributes[scrappable_attribute.attribute]
       end
-      # Define getter from html doc
+      # Define getter from Nokogiri html doc
       define_method("get_#{scrappable_attribute.attribute}") do |doc|
         node_element = doc.send("at_css", scrappable_attribute.selector)
         if node_element.nil?

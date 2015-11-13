@@ -35,7 +35,7 @@ class AtrapaloScraper
 
   def get_post_details
     doc = Nokogiri::HTML(@session.html)
-    forms = doc.css('li.clear form')[5..10]
+    forms = doc.css('form[action="/coches/carrito_base/"]')
     forms.map do |form|
       hidden_inputs = form.css('[type="hidden"]')
       create_attrs(hidden_inputs)
@@ -44,6 +44,9 @@ class AtrapaloScraper
 
   def get_car_details(manager:, body_params:, url:)
     car_detail_page = @mechanize.post(url, body_params)
+    rescue Mechanize::ResponseCodeError
+      puts 'Status Code Error Fetching Car info'
+    end
     # car_detail_page.save('car_page.html')
     doc = car_detail_page.parser
     puts 'creating car...'

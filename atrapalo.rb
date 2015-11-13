@@ -7,7 +7,7 @@ dates_manager = DateCityManager.new(parser)
 
 manager = ScraperManager.new({
   date_city_manager: dates_manager,
-  filename: "inputs/atrapalo/input_test.csv",
+  filename: "inputs/atrapalo/cities_and_dates.csv",
   scraper_klass: AtrapaloScraper,
   car_manager_klass: CarManager,
   output_manager: OutputParser.new

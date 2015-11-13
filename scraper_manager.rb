@@ -19,6 +19,7 @@ class ScraperManager
   end
 
   def start_scrapping
+    @start_time = DateTime.now
     Capybara.default_max_wait_time = 30
     session = Capybara::Session.new(@driver)
 
@@ -30,6 +31,7 @@ class ScraperManager
     end
     cars = compact_car_managers(@car_managers)
     @output_manager.print_results(cars)
+    print_duration_info
   end
 
   def compact_car_managers(car_managers)
@@ -46,5 +48,11 @@ class ScraperManager
     end
 
     cars
+  end
+
+  def print_duration_info
+    puts "Scraped ended!"
+    puts "Started at #{@start_time.strftime('%b %e, %l:%M %p')}"
+    puts "Ended at #{DateTime.now.strftime('%b %e, %l:%M %p')}"
   end
 end

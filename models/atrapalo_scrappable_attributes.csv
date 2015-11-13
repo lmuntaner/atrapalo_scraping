@@ -1,16 +1,23 @@
 Attributes,Selector,Nokigiri Method
-Dealer,p:contains('Empresa'),content
-Grupo,p:contains('Grupo'),content
-Make,p.product-name,content
-Perceived price,span.celda-importe,content
-Price with reimbursment,#totalDesglose,content
-fuel policy,p:contains('Politica de combustible'),content
-reglas_tarifa,"h3:contains(""Reglas de la tarifa"") + ul",content
-reglas_reserva,"h3:contains(""Reglas de la reserva"") + ul",content
-cancelaciones_cambios,"h3:contains(""Cancelaciones y cambios"") + ul",content
-km_policy,"strong:contains(""Kilómetros / Millas"")",parent_content
-impuestos,"strong:contains(""Incluido en el precio"")",parent_content
-politica_combustible,"strong:contains(""Políticas de combustible"")",parent_content
-pick_up,p:contains('Recogida'),content
-return,p:contains('Entrega'),content
-condiciones_generales,#condicionesGenerales_coc,content
+dealer,p:contains('Empresa'),content
+make,.short-summary > p,content
+insurance_amount,span.insurance-amount,content
+price_with_reimbursement,#totalDesglose,content
+fuel_policy,strong:contains('Políticas de combustible - Opciones') ~ div,content
+general_conditions_tarifa,"h3:contains(""Reglas de la tarifa"") + ul",content
+general_conditions_reserva,"h3:contains(""Reglas de la reserva"") + ul",content
+general_conditions_cancelacion,"h3:contains(""Cancelaciones y cambios"") + ul",content
+politica_cancelacion,strong:contains('No Shows') ~ div,content
+km_policy,strong:contains('Kilómetros / Millas') ~ div,parent_content
+pick_up_date_time,p:contains('Recogida'),second_child_content
+pick_up_location,p:contains('Recogida'),third_child_content
+return_date_time,p:contains('Entrega'),second_child_content
+return_location,p:contains('Entrega'),third_child_content
+dealer_conditions,h2:contains('Condiciones del proveedor') ~ div > div,content
+driver_policy,strong:contains('Cargos de conducción') ~ div,content
+license_policy,strong:contains('Requisitos de la licencia') ~ div,content
+age_policy,strong:contains('Restricciones de Edad') ~ div,content
+franquicia,"strong:contains('Depósitos, franquicias/deducibles y coberturas')",parent_content
+additional_driver,strong:contains('Conductores adicionales') ~ div,content
+rental_cars_info,strong:contains('Información importante sobre Rentalcars.com') ~ div,content
+dealer_information,strong:contains('Información importante del proveedor del alquiler') ~ div,content

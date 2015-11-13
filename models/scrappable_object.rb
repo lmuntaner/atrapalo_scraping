@@ -39,7 +39,8 @@ class ScrappableObject
     @filename = filename
   end
 
-  def initialize(doc)
+  def initialize(doc:, params: {})
+    attributes.merge! params
     get_details(doc)
   end
 

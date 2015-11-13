@@ -11,8 +11,8 @@ class CarManager
     @cars = []
   end
 
-  def add_car(doc)
-    @cars << Car.new(doc)
+  def add_car(doc:, params: {})
+    @cars << Car.new(doc: doc, params: params)
   end
 
   def message

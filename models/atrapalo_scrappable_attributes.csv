@@ -1,5 +1,6 @@
 Attributes,Selector,Nokigiri Method
 dealer,p:contains('Empresa'),content
+group,p:contains('Grupo'),content
 make,.short-summary > p,content
 insurance_amount,span.insurance-amount,content
 price_with_reimbursement,#totalDesglose,content

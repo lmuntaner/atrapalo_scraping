@@ -33,24 +33,28 @@ class AtrapaloScraper
     end
   end
 
-  def get_post_details
+  def get_car_and_post_details
     doc = Nokogiri::HTML(@session.html)
     forms = doc.css('form[action="/coches/carrito_base/"]')
     forms.map do |form|
       hidden_inputs = form.css('[type="hidden"]')
-      create_attrs(hidden_inputs)
+      attrs = create_attrs(hidden_inputs)
+      attrs[:payment_method] = form.at_css('.tipo-pago').content
+      attrs
     end
   end
 
-  def get_car_details(manager:, body_params:, url:)
-    car_detail_page = @mechanize.post(url, body_params)
+  def get_car_details(manager:, body_params:, url:, car_params: {})
+    begin
+      car_detail_page = @mechanize.post(url, body_params)
     rescue Mechanize::ResponseCodeError
       puts 'Status Code Error Fetching Car info'
+      return
     end
     # car_detail_page.save('car_page.html')
     doc = car_detail_page.parser
     puts 'creating car...'
-    manager.add_car(doc)
+    manager.add_car(doc: doc, params: car_params)
   end
 
   def fill_and_search(start_date:, end_date:, city:)
@@ -71,10 +75,17 @@ class AtrapaloScraper
     # Accept alert if it pops up when no results
     check_alert
     return unless check_selector?("h1.h1resultados", "in da results page for #{manager.message}")
-    post_details = get_post_details
-    post_details.each do |post_attrs|
+    car_post_details = get_car_and_post_details
+    car_post_details.each do |car_post_attrs|
       sleep 5
-      get_car_details(url: "#{@url}/coches/carrito_base/", body_params: post_attrs, manager: manager)
+      car_params = { payment_method: car_post_attrs[:payment_method] }
+      car_post_attrs.delete(:payment_method)
+      get_car_details({
+        url: "#{@url}/coches/carrito_base/",
+        body_params: car_post_attrs,
+        manager: manager,
+        car_params: car_params
+      })
     end
   end
 end

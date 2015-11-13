@@ -3,6 +3,9 @@ dealer,p:contains('Empresa'),content
 group,p:contains('Grupo'),content
 make,.short-summary > p,content
 insurance_amount,span.insurance-amount,content
+baby_seat_price,"[for=""babyseat_selected""] .price",content
+luggage_rack_price,"[for=""luggagerack_selected""] .price",content
+gps_price,"[for=""gps_selected""] .price",content
 price_with_reimbursement,#totalDesglose,content
 fuel_policy,strong:contains('Políticas de combustible - Opciones') ~ div,content
 general_conditions_tarifa,"h3:contains(""Reglas de la tarifa"") + ul",content

@@ -44,17 +44,18 @@ class AtrapaloScraper
     end
   end
 
-  def get_car_details(manager:, body_params:, url:, car_params: {})
+  def get_car_details_page(body_params:, url:)
     begin
-      car_detail_page = @mechanize.post(url, body_params)
+      # car_detail_page = @mechanize.post(url, body_params)
+      @mechanize.post(url, body_params).parser
     rescue Mechanize::ResponseCodeError
       puts 'Status Code Error Fetching Car info'
-      return
+      return false
     end
     # car_detail_page.save('car_page.html')
-    doc = car_detail_page.parser
-    puts 'creating car...'
-    manager.add_car(doc: doc, params: car_params)
+    # doc = car_detail_page.parser
+    # puts 'creating car...'
+    # manager.add_car(doc: doc, params: car_params)
   end
 
   def fill_and_search(start_date:, end_date:, city:)
@@ -75,17 +76,22 @@ class AtrapaloScraper
     # Accept alert if it pops up when no results
     check_alert
     return unless check_selector?("h1.h1resultados", "in da results page for #{manager.message}")
+    search_time = DateTime.now
     car_post_details = get_car_and_post_details
     car_post_details.each do |car_post_attrs|
       sleep 5
-      car_params = { payment_method: car_post_attrs[:payment_method] }
+      car_params = {
+        payment_method: car_post_attrs[:payment_method],
+        search_time: search_time.strftime('%b %e, %l:%M %p')
+      }
       car_post_attrs.delete(:payment_method)
-      get_car_details({
-        url: "#{@url}/coches/carrito_base/",
-        body_params: car_post_attrs,
-        manager: manager,
-        car_params: car_params
-      })
+      car_detail_page = get_car_details_page({
+          url: "#{@url}/coches/carrito_base/",
+          body_params: car_post_attrs
+        })
+      return unless car_detail_page
+      puts 'creating car...'
+      manager.add_car(doc: car_detail_page, params: car_params)
     end
   end
 end

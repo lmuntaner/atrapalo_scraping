@@ -35,7 +35,7 @@ class AtrapaloScraper
 
   def get_car_and_post_details
     doc = Nokogiri::HTML(@session.html)
-    forms = doc.css('form[action="/coches/carrito_base/"]')
+    forms = doc.css('form[action="/coches/carrito_base/"]')[10..15]
     forms.map do |form|
       hidden_inputs = form.css('[type="hidden"]')
       attrs = create_attrs(hidden_inputs)
@@ -77,7 +77,7 @@ class AtrapaloScraper
       sleep 5
       car_params = {
         payment_method: car_post_attrs[:payment_method],
-        search_time: search_time.strftime('%b %e, %l:%M %p')
+        search_time: search_time.strftime('%d/%m/%Y')
       }
       car_post_attrs.delete(:payment_method)
       car_detail_page = get_car_details_page({

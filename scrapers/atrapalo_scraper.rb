@@ -9,6 +9,7 @@ class AtrapaloScraper
   end
 
   def check_alert
+    sleep 20
     @session.driver.browser.switch_to.alert.accept
   rescue Selenium::WebDriver::Error::NoSuchAlertError
     return

@@ -47,16 +47,11 @@ class AtrapaloScraper
 
   def get_car_details_page(body_params:, url:)
     begin
-      # car_detail_page = @mechanize.post(url, body_params)
       @mechanize.post(url, body_params).parser
     rescue Mechanize::ResponseCodeError
       puts 'Status Code Error Fetching Car info'
       return false
     end
-    # car_detail_page.save('car_page.html')
-    # doc = car_detail_page.parser
-    # puts 'creating car...'
-    # manager.add_car(doc: doc, params: car_params)
   end
 
   def fill_and_search(start_date:, end_date:, city:)
@@ -83,7 +78,7 @@ class AtrapaloScraper
       sleep 5
       car_params = {
         payment_method: car_post_attrs[:payment_method],
-        search_time: search_time.strftime('%b %e, %l:%M %p')
+        search_time: search_time.strftime('%d/%m/%Y')
       }
       car_post_attrs.delete(:payment_method)
       car_detail_page = get_car_details_page({
